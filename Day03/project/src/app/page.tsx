@@ -8,7 +8,7 @@ import Featured2 from './Components/Featured2'
 import DressStyle from './Components/DressStyle'
 import HappyCustomers from './Components/CustomersReview'
 
-export default async function Home() {
+export default function Home() {
   return (
     <div>
       <HeroSection />

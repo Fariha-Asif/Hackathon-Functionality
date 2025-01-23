@@ -67,19 +67,17 @@ export default async function ProductPage({ params }: ProductPageProps) {
                         {product.description}
                     </p>
                     <p className="text-2xl font-sans">
-                        <h3 className="font-bold">Sizes:</h3> {product.sizes?.join(", ")}
+                        <h3 className="font-bold">Sizes</h3> {product.sizes?.join(", ")}
                     </p>
                     <p className="text-2xl font-sans">
-                    <h3 className="font-bold">Colors:</h3> {product.colors?.join(", ")}
+                    <h3 className="font-bold">Colors</h3> {product.colors?.join(", ")}
                     </p>
                     <p className="text-2xl font-sans">
                         {product.new ? "New Arrival" : "Regular"}
                     </p>
-                    {product.discountPercent && (
-                        <p className="text-xl font-semibold text-green-500">
-                            {product.discountPercent}% Off!
-                        </p>
-                    )}
+                    <p className="text-xl font-semibold text-green-500">
+                        {product.discountPercent}
+                    </p>
                 </div>
             </div>
         </div>
