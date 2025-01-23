@@ -37,7 +37,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
     if (!product) {
         return (
             <div className="max-w-7xl mx-auto px-4">
-                <h1 className="text-3xl font-bold text-red-500">Product "{slug}" not found.</h1>
+                <h1 className="text-3xl font-bold text-red-500">Product not found.</h1>
             </div>
         );
     }
@@ -76,7 +76,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                         {product.new ? "New Arrival" : "Regular"}
                     </p>
                     <p className="text-xl font-semibold text-green-500">
-                        {product.discountPercent}
+                        {product.discountPercent} % off!
                     </p>
                 </div>
             </div>
