@@ -7,6 +7,7 @@ import { Product } from "../../../types/products";
 import { allProducts, four } from "@/sanity/lib/queries";
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
+import Link from "next/link";
 
 export default function SlideFeature() {
   const [product, setProduct] = useState<Product[]>([]);
@@ -27,22 +28,24 @@ export default function SlideFeature() {
       {/* Slider Container */}
       <div className="max-w-[1450px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 px-4 gap-8">
         {product.map((product) => (
-          <div key={product._id}>
-            {product.image && (
-              <Image
-                src={urlFor(product.image).url() || ''}
-                alt={product.name || 'Product image'}
-                width={200}
-                height={200}
-                priority // Optional: Improve performance for above-the-fold images
-                className="w-full"
-              />
-            )}
-            <div className="font-bold">
-              {product.name} <br/>
-              {product.price}
-            </div>
-                          
+          <div key={product._id}
+            className="border rounded-lg shadow-md p-4 hover:shadow-lg transition duration-200">
+            <Link href={`/product/${product.slug.current}`}>
+              {product.image && (
+                <Image
+                  src={urlFor(product.image).url() || ''}
+                  alt={product.name || 'Product image'}
+                  width={200}
+                  height={200}
+                  priority // Optional: Improve performance for above-the-fold images
+                  className="w-full"
+                />
+              )}
+              <div className="font-bold">
+                {product.name} <br/>
+                {product.price}
+              </div>
+            </Link>         
           </div>
         ))}
       </div>

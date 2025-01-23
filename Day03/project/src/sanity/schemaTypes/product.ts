@@ -11,6 +11,15 @@ export default defineType({
         type: 'string',
         },
         {
+        name: 'slug',
+        type: 'slug',
+        title: 'Slug',
+        options: {
+            source: 'name',
+            maxLength: 200,
+        }
+        },
+        {
         name: 'price',
         title: 'Price',
         type: 'string',
