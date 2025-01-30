@@ -8,7 +8,7 @@ import Image from 'next/image'
 import { urlFor } from '@/sanity/lib/image'
 import { CgChevronRight } from 'react-icons/cg'
 
-const checkout = () => {
+const Checkout = () => {
 
     const [cartItems, setCartItems] = useState<Product[]>([])
     const [discount, setDiscount] = useState<number>(0)
@@ -273,4 +273,4 @@ const checkout = () => {
   )
 }
 
-export default checkout
+export default Checkout
