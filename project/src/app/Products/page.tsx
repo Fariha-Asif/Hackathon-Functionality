@@ -65,10 +65,11 @@ export default function SlideFeature() {
                     <span>⭐</span>
                     <span>⭐</span>
                 </div>
-                <button className="bg-black text-white py-2 px-8 rounded-lg mt-4 hover:scale-110 transition-transform duration-300 ease-in-out"
-                onClick={(e) => handleAddToCart(e, product)}>
+              <Link href={`/product/${product.slug.current}`}>
+                <button className="bg-black text-white py-2 px-8 rounded-lg mt-4 hover:scale-110 transition-transform duration-300 ease-in-out">
                   View Details
                 </button>
+              </Link>
             </Link>         
           </div>
         ))}

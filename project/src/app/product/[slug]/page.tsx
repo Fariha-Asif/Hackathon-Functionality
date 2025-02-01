@@ -1,17 +1,20 @@
+'use client'
 
 import { client } from "@/sanity/lib/client";
 import { Product } from "../../../../types/products";
 import { groq } from "next-sanity";
 import Image from "next/image";
 import { urlFor } from "@/sanity/lib/image";
+import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
+import { addToCart } from "@/app/addToCart/actions";
 
 interface ProductPageProps {
-    params: Promise<{slug: string }>; 
+    params: { slug: string };
 }
 
 async function getProduct(slug: string): Promise<Product | null> {
     console.log("Fetching product with slug:", slug); // Log the slug
-    
 
     return client.fetch(
         groq`*[_type == "products" && slug.current == $slug][0]{
@@ -27,13 +30,37 @@ async function getProduct(slug: string): Promise<Product | null> {
         }`,
         { slug }
     );
-
 }
 
+export default function ProductPage({ params }: ProductPageProps) {
+    const { slug } = params;
+    const [product, setProduct] = useState<Product | null>(null);
+    const [loading, setLoading] = useState(true);
 
-export default async function ProductPage({ params }: ProductPageProps) {
-    const { slug } = await params;
-    const product = await getProduct(slug);
+    useEffect(() => {
+        async function fetchProduct() {
+            const fetchedProduct = await getProduct(slug);
+            setProduct(fetchedProduct);
+            setLoading(false);
+        }
+        fetchProduct();
+    }, [slug]);
+
+    const handleAddToCart = (e: React.MouseEvent, product: Product) => {
+        Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: `${product.name} added to cart`,
+            showConfirmButton: false,
+            timer: 1000
+        });
+
+        addToCart(product);
+    };
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
 
     if (!product) {
         return (
@@ -42,7 +69,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
             </div>
         );
     }
-
 
     return (
         <div className="max-w-7xl mx-auto px-4 mt-10">
@@ -62,25 +88,46 @@ export default async function ProductPage({ params }: ProductPageProps) {
                     <h2 className="text-4xl font-bold">
                         {product.name}
                     </h2>
-                    <p className="text-2xl font-bold">
-                        ${product.price}
-                    </p>
-                    <p className="text-2xl font-sans">
+                    <div className="flex items-center gap-2">
+                        <span className="text-xl font-bold">${product.price}</span>
+                        {product.discountPercent && (
+                            <span className="text-xl font-semibold text-green-500">
+                                -{product.discountPercent}%
+                            </span>
+                        )}
+                    </div>
+                    <p className="text-gray-500">
                         {product.description}
                     </p>
-                    <p className="text-2xl font-sans">
-                        <h3 className="font-bold">Sizes</h3> {product.sizes?.join(", ")}
-                    </p>
-                    <p className="text-2xl font-sans">
-                    <h3 className="font-bold">Colors</h3> {product.colors?.join(", ")}
-                    </p>
-                    <p className="text-2xl font-sans">
-                        {product.new ? "New Arrival" : "Regular"}
-                    </p>
-                    <p className="text-xl font-semibold text-green-500">
-                        {product.discountPercent} % off!
-                    </p>
-                    <button className="bg-black text-white py-2 px-8 rounded-lg hover:scale-110 transition-transform duration-300 ease-in-out">
+                    <div>
+                        <h3 className="text-xl font-bold mb-3">Select Colors</h3>
+                        <div className="flex gap-2">
+                            {product.colors?.map((color: string, index: number) => (
+                                <div
+                                    key={index}
+                                    className="w-8 h-8 rounded-full border border-gray-900"
+                                    style={{ backgroundColor: color }}
+                                ></div>
+                            ))}
+                        </div>
+                    </div>
+                    <div>
+                        <h3 className="text-xl font-bold mb-3">Choose Size</h3>
+                        <div className="flex gap-2">
+                            {product.sizes?.map((size: string, index: number) => (
+                                <button
+                                    key={index}
+                                    className="w-12 h-12 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200"
+                                >
+                                    {size}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                    <button
+                        className="bg-black text-white py-3 px-8 rounded-lg hover:scale-110 transition-transform duration-300 ease-in-out"
+                        onClick={(e) => handleAddToCart(e, product)}
+                    >
                         Add to Cart
                     </button>
                 </div>

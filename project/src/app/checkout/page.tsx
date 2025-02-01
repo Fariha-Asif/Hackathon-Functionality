@@ -7,6 +7,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { urlFor } from '@/sanity/lib/image'
 import { CgChevronRight } from 'react-icons/cg'
+import { client } from '@/sanity/lib/client'
+import Swal from 'sweetalert2'
 
 const Checkout = () => {
 
@@ -54,8 +56,8 @@ const Checkout = () => {
             const errors = {
                 firstName : !formValues.firstName,
                 lastName : !formValues.lastName,
-                email : !formValues.email.includes("@"),
-                phone : !formValues.phone.match(/^[0-9]{10}$/),
+                email : !formValues.email,
+                phone : !formValues.phone,
                 address : !formValues.address,
                 zipCode : !formValues.zipCode,
                 city : !formValues.city,
@@ -65,10 +67,58 @@ const Checkout = () => {
             return Object.values(errors).every((error) => !error)
         }
 
-        const handlePlaceOrder = () => {
-            if(validateForm()) {
+        const handlePlaceOrder = async () => {
+
+            Swal.fire({
+                title : "Processing your order...",
+                text : "Please wait a moment.",
+                icon : "info",
+                showCancelButton : true,
+                confirmButtonColor : "#3085d6",
+                cancelButtonColor : "#d33",
+                confirmButtonText : "Proceed",
+            }).then((result) => {
+                if(result.isConfirmed) {
+                    if(validateForm()) {
+                        localStorage.removeItem("appliedDiscount");
+                        Swal.fire(
+                            "Success!",
+                            "Your order has been successfully processed!",
+                            "success"
+                        );
+                    }else {
+                        Swal.fire(
+                            "Error!",
+                            "Please fill all the field before proceeding.",
+                            "error"
+                        );
+                    }
+                }
+            });
+            const orderData = {
+                _type : 'order',
+                firstName : formValues.firstName,
+                lastName : formValues.lastName,
+                email : formValues.email,
+                phone : formValues.phone,
+                address : formValues.address,
+                zipCode : formValues.zipCode,
+                city : formValues.city,
+                cartItems : cartItems.map(item => ({
+                    _type : 'reference',
+                    _ref : item._id
+                })),
+                total : subTotal,
+                discount : discount,
+                orderDate : new Date().toISOString
+            };
+            try {
+                await client.create(orderData)
                 localStorage.removeItem("appliedDiscount")
+            } catch (error) {
+                console.error("error creating order", error)
             }
+
         }
   return (
     <div className="min-h-screen bg-gray-50">
