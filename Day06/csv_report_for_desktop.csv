@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Metric,Score
 Performance,100
 Accessibility,86
@@ -8,3 +9,15 @@ SI,-
 FCP,-
 LCP,-
 TBT,-
+=======
+Metric,Score
+Performance,100
+Accessibility,86
+Best Practices,93
+SEO,100
+CLS,100
+SI,-
+FCP,-
+LCP,-
+TBT,-
+>>>>>>> 8d46d12264d22bb65e1867aa6a74fc9700991ee6
