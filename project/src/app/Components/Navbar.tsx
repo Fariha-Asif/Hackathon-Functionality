@@ -3,6 +3,10 @@
 import { ChevronDown, Search, ShoppingCartIcon, User } from "lucide-react";
 import React from "react";
 import Link from "next/link";
+import {
+  SignedIn,
+  UserButton
+} from '@clerk/nextjs'
 
 
 
@@ -56,7 +60,13 @@ const Navbar = () => {
           </Link>
           
           {/* User Icon */}
-          <User className="w-[24px] h-[24px] text-black text-xl cursor-pointer" />
+
+            <Link href="/Login">
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
+            </Link>
+
         </div>
       </div>
     </header>

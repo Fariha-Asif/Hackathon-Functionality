@@ -7,7 +7,13 @@ import Navbar from "./Components/Navbar";
 import MobNav from "./Components/MobNav";
 import TopNav from "./Components/TopNav";
 import Footer from "./Components/Footer";
-
+import {
+  ClerkProvider,
+  SignedIn,
+  UserButton,
+  SignedOut,
+  SignInButton
+} from '@clerk/nextjs'
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -23,24 +29,31 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <Head>
-        <link
-          rel="stylesheet"
-          href="https://api.fontshare.com/v2/css?f[]=satoshi@400,700&display=swap"
-        />
-      </Head>
-      <body className={inter.className}>
-        <TopNav />
-        <Navbar />
-        <div className="lg:hidden">
-          <MobNav />
-        </div>
-        
-        {children}
-        <Footer />
+    <ClerkProvider>
+      <html lang="en">
+        <Head>
+          <link
+            rel="stylesheet"
+            href="https://api.fontshare.com/v2/css?f[]=satoshi@400,700&display=swap"
+          />
+        </Head>
+        <body className={inter.className}>
+          <TopNav />
+          <Navbar />
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
+          <SignedOut>
+            <SignInButton />
+          </SignedOut>
+          <div className="lg:hidden">
+            <MobNav />
+          </div>
+          
+          {children}
+          <Footer />
         </body>
-
-    </html>
+      </html>
+      </ClerkProvider>
   );
 }
